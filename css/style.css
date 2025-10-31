@@ -136,7 +136,7 @@ button:focus {
     display: none;
     z-index: 10000;
     border-radius: 3px;
-    right: 20px;
+    left: 20px;
     transition: all 0.5s;
 }
 
@@ -577,7 +577,7 @@ button:focus {
     height: 233px;
     overflow: hidden;
     border-radius: 5px;
-    background: rgba(160, 160, 172, 0.2);
+    background: #6c757d;
 }
 
 .work_box .work_img:after {
@@ -596,6 +596,8 @@ button:focus {
     max-height: 100%;
     max-width: 100%;
     transition: all 0.3s cubic-bezier(0.3, 0.1, 0.58, 1);
+    padding: 0 20px;
+    object-fit: contain;
 }
 
 .work_box .work_detail {
@@ -728,6 +730,44 @@ button:focus {
     transition: all 0.5s;
 }
 
+.section--works {
+    padding-top: 0;
+}
+
+.section_shopify img {
+    display: block;
+    width: 140px;
+    margin: 0 auto 20px auto;
+}
+
+#about {
+    padding-top: 0;
+}
+
+.shopify_float_button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #2e3135;
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    max-width: 280px;
+}
+
+.shopify_float_button img {
+    display: block;
+    max-width: 80px;
+    margin: 0 auto 10px auto;
+}
+
+.shopify_float_button div:first-of-type {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 
 /*===========================
         12.RESPONSIVE
@@ -735,7 +775,6 @@ button:focus {
 
 @media (min-width: 200px) and (max-width: 768px) {
     .custom-nav {
-        background-color: #fff !important;
         padding: 10px 0px !important;
     }
     .custom-nav .navbar-toggler {
@@ -774,6 +813,16 @@ button:focus {
     .clip-home{
         clip-path: none;
     }
+    .section:not(.header-bg-img){
+        padding: 60px 0;
+    }
+    .section.section--works {
+        padding-top: 0;
+    }
+
+    .h5, h5 {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 2560px) {
@@ -785,5 +834,20 @@ button:focus {
 @media (min-width: 1200px){
     .container {
         max-width: 1140px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .shopify_float_button {
+        padding: 6px;
+        max-width: 200px;
+    }
+
+    .shopify_float_button img {
+        max-width: 60px;
+    }
+    
+    .shopify_float_button div:first-of-type {
+        font-size: 12px;
     }
 }
