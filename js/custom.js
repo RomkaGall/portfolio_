@@ -1,135 +1,95 @@
-/*-----------------------------------------------------------
-* Template Name    : Kerri | Responsive Bootstrap 4 Personal Template
-* Author           : SRBThemes
-* Created          : March 2018
-* File Description : Main Js file of the template
-*------------------------------------------------------------
-*/
-
-! function($) {
+(function () {
     "use strict";
 
-    var KerriApp = function() {};
+    var header = document.getElementById("site-header");
+    var nav = document.getElementById("site-nav");
+    var toggle = document.querySelector(".nav-toggle");
+    var backTop = document.getElementById("back-top");
+    var filterBtns = document.querySelectorAll(".filter-btn");
+    var workItems = document.querySelectorAll(".work-item");
+    var navLinks = document.querySelectorAll(".site-nav a");
 
-    //PreLoader
-    KerriApp.prototype.initPreLoader = function() {
-        $('#status').fadeOut();
-        $('#preloader').delay(350).fadeOut('slow');
-        $('body').delay(350).css({
-            'overflow': 'visible'
-        });
-    },
+    function onScroll() {
+        var y = window.scrollY || window.pageYOffset;
 
-    //scroll
-    KerriApp.prototype.initStickyMenu = function() {
-        var navbar = document.querySelector('nav')
-        window.onscroll = function() {
-          // pageYOffset or scrollY
-          if (window.pageYOffset > 200) {
-            navbar.classList.add('stickyadd')
-          } else {
-            navbar.classList.remove('stickyadd')
-          }
+        if (header) {
+            header.classList.toggle("is-scrolled", y > 40);
         }
-    },
 
-    //Scrollspy
-    KerriApp.prototype.initScrollspy = function() {
-        var scrollSpy = new bootstrap.ScrollSpy(document.body, {
-            target: '#main_nav',
-            offset: 70
-        })
-    },
-
-    //Work
-    KerriApp.prototype.initWork = function() {
-        $(window).on('load', function () {
-            var $container = $('.work-filter');
-            var $filter = $('#menu-filter');
-            $container.isotope({
-                filter: '*',
-                layoutMode: 'masonry',
-                animationOptions: {
-                    duration: 750,
-                    easing: 'linear'
-                }
-            });
-
-            $filter.find('a').on("click",function() {
-                var selector = $(this).attr('data-filter');
-                $filter.find('a').removeClass('active');
-                $(this).addClass('active');
-                $container.isotope({
-                    filter: selector,
-                    animationOptions: {
-                        animationDuration: 750,
-                        easing: 'linear',
-                        queue: false,
-                    }
-                });
-                return false;
-            });
-        });
-    },
-
-    //Magnificpop
-    KerriApp.prototype.initMagnificPopup = function() {
-        $('.img-zoom').magnificPopup({
-            type: 'image',
-            closeOnContentClick: true,
-            mainClass: 'mfp-fade',
-            gallery: {
-                enabled: true,
-                navigateByImgClick: true,
-                preload: [0, 1]
-            }
-        });
-    },
-
-    // BACK TO TOP
-    KerriApp.prototype.initBackToTop = function() {
-        $(window).on('scroll',function(){
-            if ($(this).scrollTop() > 100) {
-                $('.back_top').fadeIn();
-            } else {
-                $('.back_top').fadeOut();
-            }
-        }); 
-        $('.back_top').click(function(){
-            $("html, body").animate({ scrollTop: 0 }, 1000);
-            return false;
-        });
-    },
-
-    //Client
-    KerriApp.prototype.initTestimonial = function() {
-        $('.owl-carousel').owlCarousel({
-            loop:true,
-            nav:false,
-            items:1,
-            autoplay:true,
-            autoplayTimeout:5000,
-            autoplayHoverPause:true,
-            autoHeight: false,
-            autoHeightClass: 'owl-height'
-        })
+        if (backTop) {
+            backTop.classList.toggle("is-visible", y > 400);
+        }
     }
 
-    KerriApp.prototype.init = function() {
-        this.initPreLoader();
-        this.initStickyMenu();
-        this.initScrollspy();
-        this.initWork();
-        this.initMagnificPopup();
-        this.initBackToTop();
-        this.initTestimonial();
-    },
-    //init
-    $.KerriApp = new KerriApp, $.KerriApp.Constructor = KerriApp
-}(window.jQuery),
+    function closeNav() {
+        if (!nav || !toggle) return;
+        nav.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open menu");
+        document.body.style.overflow = "";
+    }
 
-//initializing
-function($) {
-    "use strict";
-    $.KerriApp.init();
-}(window.jQuery);
+    function openNav() {
+        if (!nav || !toggle) return;
+        nav.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", "Close menu");
+        document.body.style.overflow = "hidden";
+    }
+
+    if (toggle && nav) {
+        toggle.addEventListener("click", function () {
+            if (nav.classList.contains("is-open")) {
+                closeNav();
+            } else {
+                openNav();
+            }
+        });
+    }
+
+    navLinks.forEach(function (link) {
+        link.addEventListener("click", closeNav);
+    });
+
+    filterBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var filter = btn.getAttribute("data-filter");
+
+            filterBtns.forEach(function (b) {
+                b.classList.remove("is-active");
+            });
+            btn.classList.add("is-active");
+
+            workItems.forEach(function (item) {
+                var cats = (item.getAttribute("data-category") || "").split(/\s+/);
+                var show = filter === "*" || cats.indexOf(filter) !== -1;
+                item.classList.toggle("is-hidden", !show);
+            });
+        });
+    });
+
+    if ("IntersectionObserver" in window) {
+        var revealObserver = new IntersectionObserver(
+            function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-inview");
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+        );
+
+        document.querySelectorAll(".reveal").forEach(function (el) {
+            revealObserver.observe(el);
+        });
+    } else {
+        document.querySelectorAll(".reveal").forEach(function (el) {
+            el.classList.add("is-inview");
+        });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+})();
